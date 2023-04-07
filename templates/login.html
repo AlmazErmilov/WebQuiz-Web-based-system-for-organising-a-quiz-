@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,8 @@
         <label for "userButton"> USER</label>
         <input type="radio" id = "1" name="loginButtons" value= "1" required> 
         <label for "adminButton"> ADMIN</label> 
-        <input type="radio" id = "2" name="loginButtons" value= "2" required><br><br>
+        <input type="radio" id = "2" name="loginButtons" value= "2" required>
+        <br><br><br>
         <!--Name bestemmer gruppering av knapper -->
         
         <!--BRUK VALUE FOR FLASK APPLIKASJONEN FOR Å VITE OM DE VELGER BRUKER ELLER ADMIN LOGIN -->
@@ -22,10 +24,10 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username"> <br><br>
 
-        <label for="password">Password:</label>
+        <label for="password">Password:&nbsp</label>
         <input type="password" id="password" name="password"><br><br>
 
         <input type="submit" value="Login">
     </form>
 </body>
-</html>
+{% endblock %}

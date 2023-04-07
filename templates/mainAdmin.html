@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +11,16 @@
 </body>
 
 <body>
-    <Label>CREATE NEW QUIZ</Label>
+    <Label>CREATE NEW QUIZ</Label><br><br>
     <form action="/addQuestionAdmin" method="POST">
         <label for="quizName">Quiz Name:</label>
         <input type="text" id="quizName" name="quizName" required>
         <input type="submit" value="Create Quiz"><br><br>
     </form>
-
+    
     <form action="/login" method="POST">
         <input type="submit" value="Back"><br><br>
     </form>
 </body>
 
-
-
-</html>
+{% endblock %}
