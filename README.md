@@ -2,7 +2,7 @@
 Faget Databaser og webapplikasjoner, våren 2023.
 Webbasert system for gjennomføring av en quiz. 
 
-# Systembeskrivelse
+## Systembeskrivelse
 
 Det skal utvikles et system som tar for seg spørsmål og svar (quiz) via et grensesnitt på web. Systemet skal ha to brukertyper slik at noen lager quiz/spørsmål og andre kan svare/gjennomføre quiz. Den ene er quiz-administrator, det vil si den som definerer spørsmål og quiz. Den andre brukertypen er de som skal kunne gjennomføre quiz. Disse brukerne skal kunne velge blant definerte quiz. Dette betyr at, avhengig av bruker, skal man få opp to ulike typer grensesnitt, en vanlig bruker og en administrator. En quiz består av et sett spørsmål som i utgangspunktet skal ta høyde for ulike spørsmålstyper. 
 
@@ -12,7 +12,7 @@ I databasen vil det være viktig å skille på definisjon av spørsmål og quiz 
 
 Databasen må modelleres med relasjoner, primærnøkler og fremmednøkler etter prinsipper for ER-modellering. Det anbefales å bruke WorkBench til modellering og konstruksjon av databasen. 
 
-# Oppgave:
+## Oppgave:
 
 1. Lag et web basert system med en hovedside som viser valg av bruker (type her kan være bruker 1 og bruker 2 med ulike rettigheter som beskrevet over). Avhengig av hvilken bruker man velger, vil man få opp enten:
 - Alle spørsmål, med redigeringsmuligheter slik som endring av felter, slettet spørsmål og endre svar, samt se svar. 
