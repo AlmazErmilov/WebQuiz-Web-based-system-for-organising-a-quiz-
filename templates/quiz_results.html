@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Quiz Results</h2>
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>User Answer</th>
+            <th>Correct Answer</th>
+        </tr>
+        {% for result in results %}
+            <tr>
+                <td>{{ result.question_text }}</td>
+                <td>{{ result.answer }}</td>
+                <td>{{ result.correct_answer }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

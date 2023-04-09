@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Regular User Interface</h2>
+    <h3>Select a Quiz</h3>
+    <select id="quiz-select">
+        {% for quiz in quizzes %}
+            <option value="{{ quiz.id }}">{{ quiz.title }}</option>
+        {% endfor %}
+    </select>
+    <button id="start-quiz">Start Quiz</button>
+    <form method="POST" action="{{ url_for('submit_quiz') }}">
+        <!-- Render quiz questions and answer options here -->
+        <input type="submit" value="Submit Quiz">
+    </form>
+{% endblock %}

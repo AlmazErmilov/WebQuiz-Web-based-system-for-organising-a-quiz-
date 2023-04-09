@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Select User Type</h2>
+    <form method="POST" action="{{ url_for('index') }}">
+        <label for="user_type">User Type:</label>
+        <select id="user_type" name="user_type">
+            <option value="admin">Administrator</option>
+            <option value="user">Regular User</option>
+        </select>
+        <input type="submit" value="Select">
+    </form>
+{% endblock %}
