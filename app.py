@@ -97,6 +97,24 @@ def delete_question(question_id):
     flash('Question deleted successfully')
     return redirect(url_for('admin'))
 
+
+# Function to start_quiz
+@app.route('/start_quiz', methods=['POST'])
+def start_quiz():
+    # quiz_id_selected = request.form['quiz-select']
+    quiz_category_selected = request.form['quiz-select']
+    '''
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT category FROM quizzes WHERE category=%s", (quiz_id_selected,))
+    quiz_category = cursor.fetchone()[0]
+    cursor.close()
+    connection.close()
+    '''
+    # return redirect(url_for('display_quiz', quiz_category=quiz_category))
+    # return render_template('quiz.html', quiz_id_selected=quiz_id_selected, quiz_category=quiz_category)
+    return redirect(url_for('display_quiz', quiz_category_selected=quiz_category_selected))
+
 # Function to submit a quiz
 @app.route('/submit_quiz', methods=['POST'])
 def submit_quiz():
@@ -120,15 +138,18 @@ def submit_quiz():
     return redirect(url_for('user'))
 
 # Function to display a quiz
-@app.route('/quiz/<int:quiz_id>', methods=['GET'])
-def display_quiz(quiz_id):
+# @app.route('/quiz/<int:quiz_id>', methods=['GET'])
+@app.route('/quiz/<string:quiz_category_selected>', methods=['GET'])
+def display_quiz(quiz_category_selected):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM questions WHERE quiz_id=%s", (quiz_id,))
+    cursor.execute("SELECT * FROM questions WHERE category=%s", (quiz_category_selected,))
     questions = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template('quiz.html', questions=questions)
+    return render_template('quiz.html', questions=questions, quiz_category_selected=quiz_category_selected)
+    # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
+
 
 # Function to display quiz results
 @app.route('/quiz_results/<int:quiz_id>', methods=['GET'])

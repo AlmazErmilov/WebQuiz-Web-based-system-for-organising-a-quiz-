@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-
 {% block content %}
     <h2>Regular User Interface</h2>
     <h3>Select a Quiz</h3>
-    <select id="quiz-select">
+    <!-- start quiz ... -->
+    <form method="POST" action="{{ url_for('start_quiz') }}">
+        <input type="submit" value="Start Quiz">
+        <select id="quiz-select" name="quiz-select">
         {% for quiz in quizzes %}
-            <option value="{{ quiz.id }}">{{ quiz.title }}</option>
+            <!-- <option value="{{ quiz.id }}">{{ quiz.title }}</option> -->
+            <option value="{{ quiz[2] }}">{{ quiz[2] }}</option>
         {% endfor %}
-    </select>
-    <button id="start-quiz">Start Quiz</button>
-    <form method="POST" action="{{ url_for('submit_quiz') }}">
-        <!-- Render quiz questions and answer options here -->
-        <input type="submit" value="Submit Quiz">
+        </select>
     </form>
 {% endblock %}

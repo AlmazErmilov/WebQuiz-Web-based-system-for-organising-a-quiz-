@@ -1,19 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Quiz</h2>
-    <form method="POST" action="{{ url_for('submit_quiz') }}">
-        <input type="hidden" name="quiz_id" value="{{ questions[0].quiz_id }}">
+    <h2>{{ quiz_category }}</h2>
+    <form action="{{ url_for('submit_quiz') }}" method="post">
+        <input type="hidden" name="quiz_id" value="{{ quiz_id }}">
         {% for question in questions %}
             <div class="question">
-                <p>{{ question.question_text }}</p>
-                <!-- Render answer options here (you may need to adjust the data structure and query) -->
-                <input type="radio" name="answer_{{ question.id }}" value="option1">Option 1<br>
-                <input type="radio" name="answer_{{ question.id }}" value="option2">Option 2<br>
-                <input type="radio" name="answer_{{ question.id }}" value="option3">Option 3<br>
-                <input type="radio" name="answer_{{ question.id }}" value="option4">Option 4<br>
+                <p>{{ question[2] }}</p>
+                <input type="text" name="answer_{{ question[0] }}" required>
             </div>
         {% endfor %}
-        <input type="submit" value="Submit Quiz">
+        <button type="submit">Submit Quiz</button>
     </form>
 {% endblock %}
