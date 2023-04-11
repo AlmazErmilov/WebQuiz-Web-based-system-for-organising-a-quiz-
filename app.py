@@ -29,7 +29,6 @@ def index():
             return redirect(url_for('user'))
     return render_template('index.html')
 
-
 @app.route('/admin')
 def admin():
     admin_name = request.args.get('admin_name', default=None)
@@ -38,7 +37,6 @@ def admin():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM questions")
 
-    # questions = cursor.fetchall()
     questions_raw = cursor.fetchall()
     questions = [dict(id=row[0], quiz_id=row[1], question_text=row[2], answer=row[3], category=row[4]) for row in questions_raw]
 
@@ -138,7 +136,6 @@ def start_quiz():
 
 # Function to display a quiz
 @app.route('/quiz/<int:quiz_id>', methods=['GET'])
-# @app.route('/quiz/<string:quiz_category_selected>', methods=['GET'])
 def display_quiz(quiz_id):
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -151,17 +148,27 @@ def display_quiz(quiz_id):
     # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
 
 # Function to display quiz results
-@app.route('/quiz_results/<int:quiz_id>', methods=['GET'])
-def quiz_results(quiz_id):
+@app.route('/quiz_results', methods=['GET'])
+@app.route('/quiz_results/<int:quiz_id>', methods=['POST'])
+def quiz_results(quiz_id=None):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM quizzes")
+    quizzes = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
     connection = get_db_connection()
     cursor = connection.cursor()
     cursor.execute("SELECT q.question_text, ua.answer, q.answer as correct_answer \
-                   FROM questions q JOIN user_answers ua ON q.id = ua.question_id WHERE ua.quiz_id = %s", 
+                   FROM questions q JOIN user_answers ua \
+                   ON q.id = ua.question_id WHERE ua.quiz_id = %s", 
                    (quiz_id,))
     results = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template('quiz_results.html', results=results)
+
+    return render_template('quiz_results.html', results=results, quizzes=quizzes)
 
 # Function to submit a quiz
 @app.route('/submit_quiz', methods=['POST'])
