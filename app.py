@@ -19,11 +19,21 @@ def get_db_connection():
 def index():
     if request.method == 'POST':
         user_type = request.form['user_type']
-        return redirect(url_for(user_type))
+        admin_name = request.form.get('name', None)  
+        if user_type == 'admin' and not admin_name:
+            message = 'Name required for admin login'
+            return render_template('index.html', message=message)
+        elif user_type == 'admin':    
+            return redirect(url_for('admin', admin_name=admin_name))
+        else:
+            return redirect(url_for('user'))
     return render_template('index.html')
+
 
 @app.route('/admin')
 def admin():
+    admin_name = request.args.get('admin_name', default=None)
+
     connection = get_db_connection()
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM questions")
@@ -32,9 +42,9 @@ def admin():
     questions_raw = cursor.fetchall()
     questions = [dict(id=row[0], quiz_id=row[1], question_text=row[2], answer=row[3], category=row[4]) for row in questions_raw]
 
-    cursor.close()
+    cursor.close()                      
     connection.close()
-    return render_template('admin.html', questions=questions)
+    return render_template('admin.html', questions=questions, admin_name=admin_name)
 
 @app.route('/user')
 def user():
