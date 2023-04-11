@@ -8,7 +8,7 @@
         <select id="quiz-select" name="quiz-select">
         {% for quiz in quizzes %}
             <!-- <option value="{{ quiz.id }}">{{ quiz.title }}</option> -->
-            <option value="{{ quiz[2] }}">{{ quiz[2] }}</option>
+            <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
         {% endfor %}
         </select>
     </form>

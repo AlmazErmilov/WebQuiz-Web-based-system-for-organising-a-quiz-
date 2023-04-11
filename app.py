@@ -65,8 +65,20 @@ def create_question():
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO questions (category, question_text, answer) VALUES (%s, %s, %s)", 
-                   (category, question_text, answer))
+    cursor.execute("SELECT category FROM quizzes WHERE category=%s", (category,))
+    cursor.fetchall()
+    if cursor.rowcount == 0:
+        cursor.execute("INSERT INTO quizzes (category) VALUES (%s)", (category,))
+        connection.commit()
+    cursor.execute("SELECT id FROM quizzes WHERE category=%s", (category,)) 
+    quiz_id = cursor.fetchall()[0][0]
+    cursor.close()
+    connection.close()
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO questions (quiz_id, question_text, answer, category) VALUES (%s, %s, %s, %s)", 
+                (quiz_id, question_text, answer, category))
     connection.commit()
     cursor.close()
     connection.close()
@@ -107,23 +119,49 @@ def delete_question(question_id):
     flash('Question deleted successfully')
     return redirect(url_for('admin'))
 
-
 # Function to start_quiz
 @app.route('/start_quiz', methods=['POST'])
 def start_quiz():
-    # quiz_id_selected = request.form['quiz-select']
-    quiz_category_selected = request.form['quiz-select']
-    '''
+    quiz_id = request.form['quiz-select']
+    # quiz_category_selected = request.form['quiz-select']
+    
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT category FROM quizzes WHERE category=%s", (quiz_id_selected,))
-    quiz_category = cursor.fetchone()[0]
+    cursor.execute("SELECT category FROM quizzes WHERE id=%s", (quiz_id,))
+    # quiz_category = cursor.fetchone()[0]
+    quiz_category = cursor.fetchall()[0][0]
     cursor.close()
     connection.close()
-    '''
-    # return redirect(url_for('display_quiz', quiz_category=quiz_category))
+    
     # return render_template('quiz.html', quiz_id_selected=quiz_id_selected, quiz_category=quiz_category)
-    return redirect(url_for('display_quiz', quiz_category_selected=quiz_category_selected))
+    return redirect(url_for('display_quiz', quiz_id=quiz_id))
+
+# Function to display a quiz
+@app.route('/quiz/<int:quiz_id>', methods=['GET'])
+# @app.route('/quiz/<string:quiz_category_selected>', methods=['GET'])
+def display_quiz(quiz_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM questions WHERE quiz_id=%s", (quiz_id,))
+    questions = cursor.fetchall()
+    quiz_category_selected = questions[0][4]
+    cursor.close()
+    connection.close()
+    return render_template('quiz.html', questions=questions, quiz_id=quiz_id, quiz_category_selected=quiz_category_selected)
+    # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
+
+# Function to display quiz results
+@app.route('/quiz_results/<int:quiz_id>', methods=['GET'])
+def quiz_results(quiz_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT q.question_text, ua.answer, q.answer as correct_answer \
+                   FROM questions q JOIN user_answers ua ON q.id = ua.question_id WHERE ua.quiz_id = %s", 
+                   (quiz_id,))
+    results = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template('quiz_results.html', results=results)
 
 # Function to submit a quiz
 @app.route('/submit_quiz', methods=['POST'])
@@ -146,33 +184,6 @@ def submit_quiz():
 
     flash('Quiz submitted successfully')
     return redirect(url_for('user'))
-
-# Function to display a quiz
-# @app.route('/quiz/<int:quiz_id>', methods=['GET'])
-@app.route('/quiz/<string:quiz_category_selected>', methods=['GET'])
-def display_quiz(quiz_category_selected):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM questions WHERE category=%s", (quiz_category_selected,))
-    questions = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template('quiz.html', questions=questions, quiz_category_selected=quiz_category_selected)
-    # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
-
-
-# Function to display quiz results
-@app.route('/quiz_results/<int:quiz_id>', methods=['GET'])
-def quiz_results(quiz_id):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT q.question_text, ua.answer, q.answer as correct_answer \
-                   FROM questions q JOIN user_answers ua ON q.id = ua.question_id WHERE ua.quiz_id = %s", 
-                   (quiz_id,))
-    results = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template('quiz_results.html', results=results)
 
 # Run the Flask application
 if __name__ == '__main__':
