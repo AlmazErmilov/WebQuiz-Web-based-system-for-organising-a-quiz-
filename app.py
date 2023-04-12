@@ -42,7 +42,16 @@ def admin():
 
     cursor.close()                      
     connection.close()
-    return render_template('admin.html', questions=questions, admin_name=admin_name)
+
+    #code for showing answers.
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM quizzes")
+    quizzes = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template('admin.html', questions=questions, quizzes=quizzes, admin_name=admin_name)
 
 @app.route('/user')
 def user():
@@ -147,28 +156,24 @@ def display_quiz(quiz_id):
     return render_template('quiz.html', questions=questions, quiz_id=quiz_id, quiz_category_selected=quiz_category_selected)
     # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
 
-# Function to display quiz results
-@app.route('/quiz_results', methods=['GET'])
-@app.route('/quiz_results/<int:quiz_id>', methods=['POST'])
-def quiz_results(quiz_id=None):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM quizzes")
-    quizzes = cursor.fetchall()
-    cursor.close()
-    connection.close()
+@app.route('/admin_quiz_details', methods=['GET', 'POST'])
+def admin_quiz_details():
+    if request.method == 'POST':
+        quiz_id = request.form['quiz-select']
+    else:
+        return redirect(url_for('admin'))
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT q.question_text, ua.answer, q.answer as correct_answer \
-                   FROM questions q JOIN user_answers ua \
-                   ON q.id = ua.question_id WHERE ua.quiz_id = %s", 
-                   (quiz_id,))
-    results = cursor.fetchall()
+    cursor.execute("""SELECT ua.id, q.question_text, ua.answer 
+                      FROM user_answers ua 
+                      JOIN questions q ON ua.question_id = q.id 
+                      WHERE ua.quiz_id = %s""", (quiz_id,))
+    user_answers = cursor.fetchall()
     cursor.close()
     connection.close()
 
-    return render_template('quiz_results.html', results=results, quizzes=quizzes)
+    return render_template('admin_quiz_details.html', user_answers=user_answers)
 
 # Function to submit a quiz
 @app.route('/submit_quiz', methods=['POST'])

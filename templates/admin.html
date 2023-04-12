@@ -2,10 +2,7 @@
 
 {% block content %}
     <h2>Administrator Interface</h2>
-    # show results button
-    <form method="GET" action="{{ url_for('quiz_results') }}">
-        <input type="submit" value="Show Results">
-    
+
     <h3>Create Question</h3>
     <form method="POST" action="{{ url_for('create_question') }}">
         <label for="category">Category:</label>
@@ -19,6 +16,19 @@
         <br>
         <input type="submit" value="Create Question">
     </form>
+
+    <h3>Select Quiz to View User Answers</h3>
+    <form method="POST" action="{{ url_for('admin_quiz_details') }}">
+        <label for="quiz-select">Select Quiz:</label>
+        <select name="quiz-select" id="quiz-select">
+            {% for quiz in quizzes %}
+                <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="View User Answers">
+    </form>
+    
+
     <!-- Add other administrator interface elements, such as question and answer lists, here -->
     <h3>Questions</h3>
     <table>
