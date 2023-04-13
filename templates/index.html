@@ -7,10 +7,10 @@
     {% endif %}
     <form method="POST" action="{{ url_for('index') }}">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
+        <input type="text" id="name" name="name" style="width: 182px;"><br><br>
         
         <label for="user_type">User Type:</label>
-        <select id="user_type" name="user_type">
+        <select id="user_type" name="user_type" >
             <option value="user">Regular User</option>
             <option value="admin">Administrator</option>
             <br><br>

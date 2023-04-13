@@ -3,13 +3,13 @@
     <h2>Regular User Interface</h2>
     <h3>Select a Quiz</h3>
     <!-- start quiz ... -->
-    <form method="POST" action="{{ url_for('start_quiz') }}">
-        <input type="submit" value="Start Quiz">
-        <select id="quiz-select" name="quiz-select">
+    <form method="POST" action="{{ url_for('start_quiz') }}" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <select class="form-input" id="quiz-select" name="quiz-select" style="margin-bottom: 1rem;">
         {% for quiz in quizzes %}
             <!-- <option value="{{ quiz.id }}">{{ quiz.title }}</option> -->
             <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
         {% endfor %}
         </select>
+        <input type="submit" value="Start Quiz">
     </form>
 {% endblock %}

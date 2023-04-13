@@ -36,3 +36,15 @@ a {
 h3 {
     color: #f8f8f8;
 }
+
+.form-label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form-input {
+    display: inline-block;
+    width: 280px;
+}
