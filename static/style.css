@@ -32,3 +32,7 @@ a {
     color: inherit; /* blue colors for links too */
     text-decoration: inherit; /* no underline */
   }
+
+h3 {
+    color: #f8f8f8;
+}
