@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
-from db_connection_config import HOST, USER, PASSWORD, DATABASE
+from db_connection_config import HOST, USER, PASSWORD, DATABASE 
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'quiz'
@@ -130,7 +131,6 @@ def delete_question(question_id):
 @app.route('/start_quiz', methods=['POST'])
 def start_quiz():
     quiz_id = request.form['quiz-select']
-    # quiz_category_selected = request.form['quiz-select']
     
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -140,7 +140,6 @@ def start_quiz():
     cursor.close()
     connection.close()
     
-    # return render_template('quiz.html', quiz_id_selected=quiz_id_selected, quiz_category=quiz_category)
     return redirect(url_for('display_quiz', quiz_id=quiz_id))
 
 # Function to display a quiz
@@ -154,7 +153,6 @@ def display_quiz(quiz_id):
     cursor.close()
     connection.close()
     return render_template('quiz.html', questions=questions, quiz_id=quiz_id, quiz_category_selected=quiz_category_selected)
-    # return render_template('quiz.html', questions=questions, quiz_id=quiz_id_selected, quiz_category=quiz_category)
 
 @app.route('/admin_quiz_details', methods=['GET', 'POST'])
 def admin_quiz_details():
@@ -165,7 +163,7 @@ def admin_quiz_details():
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("""SELECT ua.id, q.question_text, ua.answer 
+    cursor.execute("""SELECT ua.id, q.question_text, ua.answer, q.answer, ua.created_at  
                       FROM user_answers ua 
                       JOIN questions q ON ua.question_id = q.id 
                       WHERE ua.quiz_id = %s""", (quiz_id,))
@@ -180,15 +178,16 @@ def admin_quiz_details():
 def submit_quiz():
     quiz_id = request.form['quiz_id']
     user_answers = []
+    timestamp = datetime.now()
 
     for key, value in request.form.items():
         if key.startswith('answer_'):
             question_id = int(key[7:])
-            user_answers.append((quiz_id, question_id, value))
+            user_answers.append((quiz_id, question_id, value, timestamp))
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.executemany("INSERT INTO user_answers (quiz_id, question_id, answer) VALUES (%s, %s, %s)", 
+    cursor.executemany("INSERT INTO user_answers (quiz_id, question_id, answer, created_at) VALUES (%s, %s, %s, %s)", 
                        user_answers)
     connection.commit()
     cursor.close()

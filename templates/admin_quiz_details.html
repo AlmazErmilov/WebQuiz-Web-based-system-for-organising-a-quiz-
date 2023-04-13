@@ -6,7 +6,9 @@
     <thead>
       <tr>
         <th>Question</th>
-        <th>User Answer</th>
+        <th>User answer</th>
+        <th>Correct answer</th>
+        <th>Submitted time</th>
       </tr>
     </thead>
     <tbody>
@@ -14,6 +16,8 @@
         <tr>
           <td>{{ user_answer[1] }}</td>
           <td>{{ user_answer[2] }}</td>
+          <td>{{ user_answer[3] }}</td>
+          <td>{{ user_answer[4] }}</td>
         </tr>
       {% endfor %}
     </tbody>
