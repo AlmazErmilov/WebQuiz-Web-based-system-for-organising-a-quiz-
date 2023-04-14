@@ -3,60 +3,61 @@
 {% block content %}
     <h2>Administrator Interface</h2>
     
-    <div style="display: flex; align-items: flex-start;">
-        <div>
+    <div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1; margin-right: 2rem;">
             <h3>Create Question</h3>
             <form method="POST" action="{{ url_for('create_question') }}" style="display: flex; flex-direction: column;">
-                <div>
+                <div style="margin-bottom: 1rem;">
                     <label class="form-label" for="category">Category:</label>
                     <input class="form-input" type="text" id="category" name="category">
                 </div>
-                <div>
+                <div style="margin-bottom: 1rem;">
                     <label class="form-label" for="question_text">Question:</label>
                     <input class="form-input" type="text" id="question_text" name="question_text">
                 </div>
-                <div>
+                <div style="margin-bottom: 1rem;">
                     <label class="form-label" for="answer">Correct answer:</label>
                     <input class="form-input" type="text" id="answer" name="answer">
                 </div>
-                <input type="submit" value="Create Question" style="align-self: flex-end; margin-top: 1rem;">
+                <input type="submit" value="Create Question" style="align-self: flex-start;">
             </form>
 
-            <!-- Add other administrator interface elements, such as question and answer lists, here -->
             <h3>Existing Questions</h3>
             <table>
-                <tr style="text-align: left;">
-                    <th style="width: 20%;">Category</th>
-                    <th>Question</th>
-                    <th>Correct answer</th>
-                    <th style="width: 15%;">Actions</th>
-                </tr>
-                {% for question in questions %}
+                <thead>
                     <tr>
-                        <td>{{ question.category }}</td>
-                        <td>{{ question.question_text }}</td>
-                        <td>{{ question.answer }}</td>
-                        <td>
-                            <button> <a href="{{ url_for('edit_question', question_id=question.id) }}">Edit</a> </button> |
-                            <button> <a href="{{ url_for('delete_question', question_id=question.id) }}">Delete</a> </button>
-                        </td>
+                        <th style="width: 15%;">Category</th>
+                        <th style="width: 50%">Question</th>
+                        <th>Correct answer</th>
+                        <th style="width: 15%;">Actions</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for question in questions %}
+                        <tr>
+                            <td>{{ question.category }}</td>
+                            <td>{{ question.question_text }}</td>
+                            <td>{{ question.answer }}</td>
+                            <td>
+                                <button><a href="{{ url_for('edit_question', question_id=question.id) }}">Edit</a></button>
+                                <button><a href="{{ url_for('delete_question', question_id=question.id) }}">Delete</a></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
 
-        <div style="margin-left: 2rem;">
-            <h3>Select Quiz to View User Answers</h3>
+        <div style="display: flex; flex-direction: column; flex: 1;">
             <form method="POST" action="{{ url_for('admin_quiz_details') }}" style="display: flex; flex-direction: column;">
-                <div>
+                    <h3>Select Quiz to View User Answers</h3>
                     <label class="form-label" for="quiz-select">Select Quiz:</label>
                     <select class="form-input" name="quiz-select" id="quiz-select">
-                        {% for quiz in quizzes %}
-                            <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
-                        {% endfor %}
+                      {% for quiz in quizzes %}
+                        <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
+                      {% endfor %}
                     </select>
-                </div>
-                <input type="submit" value="View User Answers" style="align-self: flex-end; margin-top: 1rem;">
+                    <br><p><button type="submit" style = "width: 175px;">View User Answers</button>                  
             </form>
         </div>
     </div>
