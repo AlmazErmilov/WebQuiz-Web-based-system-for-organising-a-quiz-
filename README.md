@@ -1,3 +1,4 @@
+# NOE ENDRRINGER FOR A TESTE GIT DIFF
 # WebQuiz
 #### Faget Databaser og webapplikasjoner, våren 2023. 
 Note: Executed strictly what is required for the task below — no more, no less.\
