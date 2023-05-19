@@ -2,3 +2,4 @@ venv/
 __pycache__
 .vscode
 db_connection_config.py
+db_connection_config.zip
