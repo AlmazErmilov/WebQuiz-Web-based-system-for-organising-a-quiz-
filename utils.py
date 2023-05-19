@@ -1,6 +1,8 @@
 import mysql.connector
 from db_connection_config import HOST, USER, PASSWORD, DATABASE
 
+###########################
+# Database Connection
 def get_db_connection():
     connection = mysql.connector.connect(
         host=HOST,
