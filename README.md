@@ -1,5 +1,4 @@
-# NOE ENDRRINGER FOR A TESTE GIT DESKTOP 2. gang
-# WebQuiz
+# WebQuiz is a web-based system for organising a quiz
 #### Faget Databaser og webapplikasjoner, våren 2023. 
 
 ### Webbasert system for gjennomføring av en quiz. 
