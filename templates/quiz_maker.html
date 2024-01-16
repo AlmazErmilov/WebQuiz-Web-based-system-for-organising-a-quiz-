@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ quiz.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .form-container { display: none; }
+        .questions-container {
+            width: 70%;
+        }
+        nav {
+            margin-top: 1rem;
+            background: #ccc;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin-right: 1rem;
+        }
+        nav .spacer {
+            margin-right: 1070px; /* Adjust the value as per your desired spacing */
+        }
+        .create-question-container {
+            width: 30%;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header {
+            background-color: #009688;
+            padding: 20px;
+            color: #fff;
+            background: #333;
+        }
+        
+        body {
+            background-image: url("/static/background.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-color: #292929;
+            color: #cfcfcf;
+        }
+    
+        h1, h2 {
+            color: #f8f8f8;
+        }
+
+        h5 {
+            color: #4d4a4a;
+        }
+    
+        .container {
+            background-color: #424242;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    
+        .container h1 {
+            margin-bottom: 30px;
+        }
+    
+        hr {
+            border-color: #657876;
+        }
+    
+        .btn-primary {
+            background-color: #000000;
+            border-color: #000000;
+        }
+    
+        .btn-primary:hover {
+            background-color: #000000;
+            border-color: #000000;
+        }
+    
+        .btn-secondary {
+            background-color: #f44336;
+            border-color: #f44336;
+        }
+    
+        .btn-secondary:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+    
+        .btn-danger {
+            background-color: #f44336;
+            border-color: #f44336;
+        }
+    
+        .btn-danger:hover {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>QuizMaster 2023</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('user') }}">User page</a>
+        <a href="{{ url_for('admin') }}">Admin page</a>
+        <span class="spacer"></span>
+        <a href="{{ url_for('home') }}">Log in</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+    </nav>
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    
+    <div class="container">
+        <h1 class="mt-5">{{ quiz.name }}</h1>
+        <hr>
+    
+        <div class="create-question-container">
+            <h2>Create a New Question</h2>
+            <!-- new question btn -->
+            <select id="question_type_select" class="form-control" style="width: 200px;">
+                <option disabled selected>Select Question Type</option>
+                <option value="essay">Essay</option>
+                <option value="mcq">Multiple Choice</option>
+                <option value="choice">Choice</option>
+            </select>
+        </div>
+        
+    
+    <!-- essay creation -->
+    <div id="essay_form" class="mt-5 form-container">
+        <h2>Create a New Essay Question</h2>
+        <form method="POST" action="{{ url_for('create_essay_question', quiz_id=quiz.id) }}">
+            <div class="form-group">
+                <label for="question_text">Question Text:</label>
+                <input type="text" class="form-control" id="question_text" name="question_text" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn btn-primary ml-auto">Create Essay Question</button>
+            </div>
+        </form>
+    </div>
+
+<!-- mc creation (checkboxes)-->
+<div id="mcq_form" class="mt-5 form-container">
+    <h2>Create a New Multiple Choice Question</h2>
+    <form method="POST" action="{{ url_for('create_multiple_choice_question', quiz_id=quiz.id) }}">
+        <div class="form-group">
+            <label for="question_text">Question Text:</label>
+            <input type="text" class="form-control" id="question_text" name="question_text" required>
+        </div>
+        <div class="form-group options">
+            <label for="option">Option 1:</label>  
+            <input type="text" class="form-control option" id="option" name="option" required> 
+        </div>
+        <div class="button-container">
+            <button type="button" class="btn btn-secondary add_option">Add Option</button>
+            <button type="submit" class="btn btn-primary mt-3">Create Multiple Choice Question</button>
+        </div>
+    </form>
+</div>
+
+<!-- choice creation (radio buttons)-->
+<div id="choice_form" class="mt-5 form-container">
+    <h2>Create a New Choice Question</h2>
+    <form method="POST" action="{{ url_for('create_choice_question', quiz_id=quiz.id) }}">
+        <div class="form-group">
+            <label for="question_text">Question Text:</label>
+            <input type="text" class="form-control" id="question_text" name="question_text" required>
+        </div>
+        <div class="form-group options">
+            <label for="option">Option:</label> 
+            <input type="text" class="form-control option" id="option" name="option" required>  
+        </div>
+        <div class="button-container">
+            <button type="button" class="btn btn-secondary add_option">Add Option</button>
+            <button type="submit" class="btn btn-primary mt-3">Create Choice Question</button>
+        </div>
+    </form>
+</div>
+
+</br></br>
+<div class="questions-container">
+<!-- Existing Questions -->
+{% for question in questions %}
+<div class="card mb-3" data-question-id="{{ question.id }}">
+    <div class="card-body">
+        <h5 class="card-title">Question text: {{ question.question_text }}</h5>
+        <p class="card-text">Question Type: {{ question.question_type }}</p>
+        {% if question.question_type == 'choice' or question.question_type == 'multiple_choice' %}
+        <div class="options-container">
+            <h6>Options:</h6>
+            {% for option in question.options.split(';;;') %}
+                <p>- {{ option }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="button-container">
+            <button type="button" class="btn btn-danger delete-question">Delete</button>
+            <button type="button" class="btn btn-primary edit-question">Edit</button> 
+        </div>
+    </div>
+    <!-- Form for edit question -->
+    <div class="edit-form-container" style="display: none;">
+        <form class="edit-question-form" action="{{ url_for('edit_question', question_id=question.id) }}" method="post">
+            <div class="form-group">
+                <label for="question_text">Question Text:</label>
+                <input type="text" class="form-control" name="question_text" value="{{ question.question_text }}" required>
+            </div>
+            {% if question.question_type == 'choice' or question.question_type == 'multiple_choice' %}
+            <div class="options-container">
+                <h6>Options:</h6>
+                {% for option in question.options.split(';;;') %}
+                <div class="form-group">
+                    <input type="text" class="form-control option" name="option" value="{{ option }}" required>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="button-container">
+                <button type="submit" class="btn btn-primary ml-auto">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+</div>
+</div>
+
+<footer>
+<p>&copy; QuizMaster 2023</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#question_type_select').on('change', function() {
+            var questionType = $(this).val();
+            switch(questionType) {
+                case 'essay':
+                    $('#essay_form').show();
+                    $('#mcq_form').hide();
+                    $('#choice_form').hide();
+                    break;
+                case 'mcq':
+                    $('#essay_form').hide();
+                    $('#mcq_form').show();
+                    $('#choice_form').hide();
+                    break;
+                case 'choice':
+                    $('#essay_form').hide();
+                    $('#mcq_form').hide();
+                    $('#choice_form').show();
+                    break;
+                default:
+                    $('#essay_form').hide();
+                    $('#mcq_form').hide();
+                    $('#choice_form').hide();
+            }
+        });
+
+        $('.add_option').on('click', function() {
+            var optionsDiv = $(this).parent().prev('.form-group.options');
+            var newOption = $('<div class="form-group"><label>Option:</label><input type="text" class="form-control option" required></div>');
+            optionsDiv.append(newOption);
+        });
+
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = $(this).serializeArray();
+            var options = [];
+            var optionInputs = $(this).find('.option');  
+            optionInputs.each(function() {
+                options.push($(this).val());  
+            });
+            var optionsString = options.join(';;;');
+            $(this).append('<input type="hidden" name="options" value="' + optionsString + '">');
+            this.submit();
+        });
+
+        $('.delete-question').on('click', function() {
+            var questionCard = $(this).closest('.card');
+            var questionId = questionCard.attr('data-question-id');
+
+            $.ajax({
+                url: '/delete_question/' + questionId,
+                method: 'POST',
+                success: function() {
+                    questionCard.remove();
+                },
+                error: function() {
+                    alert('Failed to delete the question.');
+                }
+            });
+        });
+
+        $('.edit-question').on('click', function() {
+            var questionCard = $(this).closest('.card');
+            var editFormContainer = questionCard.find('.edit-form-container');
+            editFormContainer.show();
+        });
+
+        $('.edit-question-form').on('submit', function(e) {
+            e.preventDefault();
+            var questionCard = $(this).closest('.card');
+            var questionId = questionCard.attr('data-question-id');
+            var newQuestionText = $(this).find('input[name="question_text"]').val();
+            var newOptions = $(this).find('input[name="option"]').map(function() {
+                return $(this).val();
+            }).get();
+            var newOptionsString = newOptions.join(';;;');
+
+            $.ajax({
+                url: '/edit_question/' + questionId,
+                method: 'POST',
+                data: {
+                    question_text: newQuestionText,
+                    options: newOptionsString
+                },
+                success: function() {
+                    questionCard.find('.card-title').text('Question text: ' + newQuestionText);
+                    questionCard.find('.options-container p').each(function(i) {
+                        $(this).text('- ' + newOptions[i]);
+                    });
+                },             
+            });
+        });
+
+        $('.card').each(function() {
+            var questionType = $(this).find('.card-text:contains("Question Type:")').text().split(': ')[1];
+            if (questionType === 'multiple_choice' || questionType === 'choice') {
+                var questionCard = $(this);
+                var questionId = questionCard.attr('data-question-id');
+                fetchQuestionOptions(questionId, questionCard);
+            }
+        });
+
+        function fetchQuestionOptions(questionId, questionCard) {
+            var questionType = questionCard.find('.card-text:contains("Question Type:")').text().split(': ')[1];
+            if (questionType !== 'choice' && questionType !== 'multiple_choice') {
+                return;
+            }
+        }
+    });
+</script>
+
+
+
+</body>
+</html>
+

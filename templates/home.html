@@ -1,0 +1,66 @@
+<head>
+  <style>
+    body {
+      background-image: url('/static/background_page_home.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: repeat;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh; /* Set the container height to full viewport height */
+      color: #ffffff;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;      
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .login-button {
+      background-color: #ffffff;
+      color: #000000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 18px;
+      text-decoration: none;
+      margin: 10px; /* Add margin to create space between buttons */
+    }
+
+    .login-button:hover {
+      background-color: #000000;
+      color: #ffffff;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to <br> QuizMaster 2023</h1>
+    <div class="button-container">
+      <a href="{{ url_for('login') }}" class="login-button">Login</a>
+      <a href="{{ url_for('register') }}" class="login-button">Register</a>
+    </div>
+  </div>
+</body>
+

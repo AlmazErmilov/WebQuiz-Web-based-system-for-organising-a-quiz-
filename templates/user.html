@@ -1,15 +1,27 @@
 {% extends "base.html" %}
+
 {% block content %}
-    <h2>Regular User Interface</h2>
-    <h3>Select a Quiz</h3>
-    <!-- start quiz ... -->
-    <form method="POST" action="{{ url_for('start_quiz') }}" style="display: flex; flex-direction: column; align-items: flex-start;">
+    <h2>Regular User Interface for: {{ username }} </h2>
+
+    <h3>Select available Quiz</h3>
+    <form method="POST" action="{{ url_for('display_quiz') }}" style="display: flex; flex-direction: row; align-items: flex-start;">
         <select class="form-input" id="quiz-select" name="quiz-select" style="margin-bottom: 1rem;">
-        {% for quiz in quizzes %}
-            <!-- <option value="{{ quiz.id }}">{{ quiz.title }}</option> -->
-            <option value="{{ quiz[0] }}">{{ quiz[1] }}</option>
-        {% endfor %}
+            {% for quiz in quizzes %}
+                <option value="{{ quiz.id }}">{{ quiz.name }}</option>
+            {% endfor %}
         </select>
+        <input type="hidden" name="username" value="{{ username }}">        
         <input type="submit" value="Start Quiz">
     </form>
+
+    <h3>list of performed and approved quizes</h3>
+    <form method="POST" action="{{ url_for('user_answers') }}" style="display: flex; flex-direction: row; align-items: flex-start;">
+        <select class="form-input" id="approved-quiz-select" name="approved-quiz-select" style="margin-bottom: 1rem;">
+            {% for quiz in approved_quizzes %}
+                <option value="{{ quiz[0].id }}">{{ quiz[0].name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="See results">
+    </form>
+
 {% endblock %}

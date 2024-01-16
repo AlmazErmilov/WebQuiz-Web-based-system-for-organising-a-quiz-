@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Administrator Review Interface</h2>
+    {% if quiz_results %}
+    <table>
+        <thead>
+            <tr>
+                <th>Quiz Result ID</th>
+                <th>Quiz Name</th>
+                <th>User Name</th>
+                <th>Is Approved</th>
+                <th>Show Answers</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz_result in quiz_results %}
+            <tr>
+                <td>{{ quiz_result.QuizResults.id }}</td>
+                <td>{{ quiz_result.Quiz.name }}</td>
+                <td>{{ quiz_result.User.username }}</td>
+                <td>{{ quiz_result.QuizResults.is_approved }}</td>
+                <td><a class="button" href="{{ url_for('review_answers', quiz_id=quiz_result.Quiz.id, user_id=quiz_result.User.id) }}">Show Answers</a></td>
+                <td>
+                    <form method='POST' action='{{ url_for("approve_quiz", quiz_id=quiz_result.Quiz.id, user_id=quiz_result.User.id) }}'>
+                        <button type="submit" class="wider-button">Approve Quiz</button>
+                    </form>
+                    <form action="{{ url_for('submit_quiz_feedback') }}" method="post">
+                        <input type="hidden" name="quiz_result_id" value="{{ quiz_result.QuizResults.id }}">
+                        <input type="text" name="quiz_feedback" placeholder="Enter your feedback here" required>
+                        <button type="submit">Send Quiz Feedback</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No results to review at this moment.</p>
+    {% endif %}
+
+{% endblock %}

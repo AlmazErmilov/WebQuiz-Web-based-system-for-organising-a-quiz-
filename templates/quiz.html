@@ -1,13 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>{{ quiz_category_selected }}</h2>
-    <form action="{{ url_for('submit_quiz') }}" method="post">
+    <h2>You {{ username }} are going to start quiz</h2>
+    <h2>Quiz name: {{ quiz_name }}</h2>
+    <form action="{{ url_for('submit_quiz') }}" method="POST">
         <input type="hidden" name="quiz_id" value="{{ quiz_id }}">
         {% for question in questions %}
-            <div class="question">
-                <p>{{ question[2] }}</p>
-                <input class="form-input" type="text" name="answer_{{ question[0] }}" required>
+        <hr>    
+        <div class="question">
+                <p>Question: {{ question.question_text }}</p>
+                {% if question.question_type == 'essay' %}
+                    Possible answer(s):
+                    <input class="form-input" type="text" name="answer_{{ question.id }}" required>
+                {% elif question.question_type == 'choice' %}
+                    Possible answer(s):
+                    {% for option in question.options.split(';;;') %}
+                        {% if option %}
+                            <label>
+                                <input type="radio" name="answer_{{ question.id }}" value="{{ option }}" required>
+                                {{ option }}
+                            </label>
+                        {% endif%}
+                    {% endfor %}
+                {% else %} <!-- multiple_choice  -->
+                    Possible answer(s):
+                    {% for option in question.options.split(';;;') %}
+                            <label>
+                                <input type="checkbox" name="answer_{{ question.id }}" value="{{ option }}" >
+                                {{ option }}
+                            </label>
+                    {% endfor %}
+                {% endif %}        
             </div>
         {% endfor %}
         <br>

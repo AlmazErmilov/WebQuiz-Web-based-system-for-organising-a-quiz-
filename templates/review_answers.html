@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Review Answers</h2>
+
+{% if user_answers %}
+<table>
+    <thead>
+        <tr>
+            <th>Question Text</th>
+            <th>Quiz Name</th>
+            <th>User Name</th>
+            <th>Answer</th>
+            <th>Comment</th>
+            <th>Is Approved</th>
+            <th>Approve Answer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user_answer in user_answers %}
+        <tr>
+            <td>{{ user_answer[1] }}</td> <!-- Question Text -->
+            <td>{{ user_answer[2] }}</td> <!-- Quiz Name -->
+            <td>{{ user_answer[3] }}</td> <!-- Username -->
+            <td>{{ user_answer[0].answer }}</td> <!-- Answer -->
+            <td>{{ user_answer[0].comment }}</td> <!-- Comment -->
+            <td>{{ user_answer[0].is_approved }}</td> <!-- Is Approved -->
+            <td>
+                <form action="{{ url_for('approve_answer', answer_id=user_answer[0].id) }}" method="post">
+                    <input type="submit" value="Approve" class="btn btn-primary">
+                </form>                
+            </td>
+            <td>
+                <!-- feedback form for each answer -->
+                <form action="{{ url_for('submit_feedback', quiz_id=quiz_id) }}" method="post">
+                    <input type="hidden" name="answer_id" value="{{ user_answer[0].id }}">
+                    <input type="text" name="feedback" placeholder="Enter your feedback here">
+                    <button type="submit">Send Feedback</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No answers found.</p>
+{% endif %}
+{% endblock %}
